@@ -95,7 +95,7 @@ export default function DashboardPage() {
             <div>
               <h4 className="font-medium text-foreground mb-2">Favorite Courts</h4>
               <div className="flex flex-wrap gap-2">
-                <span className="bg-accent px-2 py-1 rounded text-sm">Queen's Park Courts</span>
+                <span className="bg-accent px-2 py-1 rounded text-sm">Queen&apos;s Park Courts</span>
                 <span className="bg-accent px-2 py-1 rounded text-sm">Trinity Bellwoods Courts</span>
               </div>
             </div>

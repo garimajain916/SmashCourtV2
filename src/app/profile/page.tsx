@@ -132,7 +132,7 @@ export default function ProfilePage() {
                   className="w-full px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 >
                   <option value="central-park">Central Park Courts</option>
-                  <option value="queens-park">Queen's Park Tennis Courts</option>
+                  <option value="queens-park">Queen&apos;s Park Tennis Courts</option>
                   <option value="trinity-bellwoods">Trinity Bellwoods Park Courts</option>
                   <option value="high-park">High Park Tennis Courts</option>
                   <option value="christie-pits">Christie Pits Park Courts</option>

@@ -87,7 +87,7 @@ export default async function Home() {
         </h3>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { name: "Queen's Park Tennis Courts", neighborhood: "Downtown", features: ["Historic Location", "Public Transit"] },
+            { name: "Queen&apos;s Park Tennis Courts", neighborhood: "Downtown", features: ["Historic Location", "Public Transit"] },
             { name: "Trinity Bellwoods Park Courts", neighborhood: "Queen West", features: ["Community Atmosphere", "Cafes Close"] },
             { name: "High Park Tennis Courts", neighborhood: "High Park", features: ["Multiple Courts", "Park Setting"] },
             { name: "Christie Pits Park Courts", neighborhood: "Christie Pits", features: ["Community Events", "Affordable"] },
