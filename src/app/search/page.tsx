@@ -1,64 +1,7 @@
 "use client";
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { torontoCourts } from '@/lib/toronto-courts'
 import { PlayerCard } from '@/components/PlayerCard'
-
-// Mock player data
-const mockPlayers = [
-  {
-    id: '1',
-    name: 'Alex Kim',
-    ntrp: 3.5,
-    courts: ['queens-park', 'trinity-bellwoods'],
-    availability: {
-      monday: ['evening'],
-      tuesday: [],
-      wednesday: ['morning', 'evening'],
-      thursday: [],
-      friday: [],
-      saturday: [],
-      sunday: [],
-    },
-    bio: 'Love to rally and play matches!',
-    image: '/players/alex.jpg',
-  },
-  {
-    id: '2',
-    name: 'Priya Singh',
-    ntrp: 4.0,
-    courts: ['high-park', 'christie-pits'],
-    availability: {
-      monday: [],
-      tuesday: ['afternoon'],
-      wednesday: [],
-      thursday: ['evening'],
-      friday: [],
-      saturday: [],
-      sunday: [],
-    },
-    bio: 'Looking for advanced players.',
-    image: '/players/priya.jpg',
-  },
-  {
-    id: '3',
-    name: 'Jordan Lee',
-    ntrp: 2.5,
-    courts: ['regent-park'],
-    availability: {
-      monday: [],
-      tuesday: [],
-      wednesday: [],
-      thursday: [],
-      friday: [],
-      saturday: ['morning'],
-      sunday: ['afternoon'],
-    },
-    bio: 'Beginner, just getting started!',
-    image: '/players/jordan.jpg',
-  },
-]
-
-type Player = typeof mockPlayers[number];
 
 const PAGE_SIZE = 6
 
@@ -66,13 +9,42 @@ const ntrpOptions = [1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0];
 const dayOptions = ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"];
 const timeOptions = ["morning","afternoon","evening"];
 
+type Player = {
+  id: string;
+  name: string;
+  ntrp: number;
+  courts: string[];
+  availability: Record<string, string[]>;
+  bio: string;
+  image?: string;
+};
+
 export default function SearchPage() {
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCourts, setSelectedCourts] = useState<string[]>([]);
   const [selectedNtrps, setSelectedNtrps] = useState<number[]>([]);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    const params = new URLSearchParams();
+    if (selectedCourts.length > 0) params.set('courts', JSON.stringify(selectedCourts));
+    if (selectedNtrps.length > 0) params.set('ntrps', JSON.stringify(selectedNtrps));
+    if (selectedDays.length > 0) params.set('days', JSON.stringify(selectedDays));
+    if (selectedTimes.length > 0) params.set('times', JSON.stringify(selectedTimes));
+    fetch(`/api/players?${params.toString()}`)
+      .then(res => res.json())
+      .then(data => {
+        setPlayers(data);
+        setLoading(false);
+        setPage(1);
+      })
+      .catch(() => setLoading(false));
+  }, [selectedCourts, selectedNtrps, selectedDays, selectedTimes]);
 
   // Checkbox handlers
   const handleCheckbox = (value: string | number, selected: any[], setter: any) => {
@@ -84,24 +56,8 @@ export default function SearchPage() {
     setPage(1);
   };
 
-  // Filter logic
-  const filteredPlayers = mockPlayers.filter(player => {
-    // If no filters are selected, show all players
-    if (
-      selectedCourts.length === 0 &&
-      selectedNtrps.length === 0 &&
-      selectedDays.length === 0 &&
-      selectedTimes.length === 0
-    ) {
-      return true;
-    }
-    // OR logic: show player if they match ANY filter
-    const courtMatch = selectedCourts.some(court => player.courts.includes(court));
-    const ntrpMatch = selectedNtrps.includes(player.ntrp);
-    const dayMatch = selectedDays.some(day => Object.keys(player.availability).includes(day) && (player.availability as Record<string, string[]>)[day].length > 0);
-    const timeMatch = selectedTimes.some(time => Object.values(player.availability as Record<string, string[]>).some(timesArr => timesArr.includes(time)));
-    return courtMatch || ntrpMatch || dayMatch || timeMatch;
-  });
+  // Remove client-side filtering, use all fetched players
+  const filteredPlayers = players;
 
   // Pagination logic
   const totalPages = Math.ceil(filteredPlayers.length / PAGE_SIZE);
@@ -179,14 +135,18 @@ export default function SearchPage() {
         </div>
         {/* Player Cards */}
         <div className="flex-1">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {paginatedPlayers.length === 0 && (
-              <div className="col-span-full text-muted-foreground">No players found. Try adjusting your filters.</div>
-            )}
-            {paginatedPlayers.map((player: Player) => (
-              <PlayerCard key={player.id} player={player} onViewProfile={() => handleViewProfile(player)} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="text-muted-foreground">Loading players...</div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {paginatedPlayers.length === 0 && (
+                <div className="col-span-full text-muted-foreground">No players found. Try adjusting your filters.</div>
+              )}
+              {paginatedPlayers.map((player: Player) => (
+                <PlayerCard key={player.id} player={player} onViewProfile={() => handleViewProfile(player)} />
+              ))}
+            </div>
+          )}
           {/* Pagination Controls */}
           {totalPages > 1 && (
             <div className="flex justify-center items-center gap-4 mt-8">

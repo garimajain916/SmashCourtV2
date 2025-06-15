@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 
 interface User {
   id: string;
-  name: string;
-  image?: string;
+  name: string | null;
+  image?: string | null;
 }
 
 interface Message {
@@ -15,6 +15,11 @@ interface Message {
   recipientId: string;
   content: string;
   createdAt: string;
+}
+
+interface Conversation {
+  user: User;
+  latestMessage: Message;
 }
 
 const fallbackAvatar = '/default-avatar.png';
@@ -26,7 +31,7 @@ function formatTime(date: string) {
 export default function MessagesPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [users, setUsers] = useState<User[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -40,22 +45,30 @@ export default function MessagesPage() {
     }
   }, [status, router]);
 
-  // Fetch users on mount (only if authenticated)
+  // Fetch conversations on mount and when a message is sent/received
   useEffect(() => {
-    if (status === 'authenticated') {
-      fetch('/api/users')
+    if (status === 'authenticated' && session?.user?.id) {
+      fetch(`/api/messages?conversationsFor=${session.user.id}`)
         .then(res => res.json())
-        .then(data => {
-          // Filter out current user from the list
-          const otherUsers = data.filter((user: User) => user.id !== session?.user?.id);
-          setUsers(otherUsers);
-          if (otherUsers.length > 0) setSelectedUserId(otherUsers[0].id);
+        .then((data: any[]) => {
+          // Type assertion: ensure each user has an id
+          const safeData: Conversation[] = data.map(c => ({
+            user: {
+              id: typeof c.user.id === 'string' ? c.user.id : 'unknown',
+              name: c.user.name ?? 'Unknown',
+              image: c.user.image ?? null,
+            },
+            latestMessage: c.latestMessage,
+          }));
+          setConversations(safeData);
+          if (safeData.length > 0 && !selectedUserId) setSelectedUserId(safeData[0].user.id);
         });
     }
-  }, [status, session]);
+    // eslint-disable-next-line
+  }, [status, session?.user?.id]);
 
   const currentUser = session?.user;
-  const otherUser = users.find(u => u.id === selectedUserId);
+  const otherUser = conversations.find(c => c.user.id === selectedUserId)?.user;
 
   // Fetch messages when selectedUserId or currentUser changes
   useEffect(() => {
@@ -84,6 +97,20 @@ export default function MessagesPage() {
     const newMsg = await res.json();
     setMessages(msgs => [...msgs, newMsg]);
     setInput('');
+    // Refresh conversations to update latest message
+    fetch(`/api/messages?conversationsFor=${currentUser.id}`)
+      .then(res => res.json())
+      .then((data: any[]) => {
+        const safeData: Conversation[] = data.map(c => ({
+          user: {
+            id: typeof c.user.id === 'string' ? c.user.id : 'unknown',
+            name: c.user.name ?? 'Unknown',
+            image: c.user.image ?? null,
+          },
+          latestMessage: c.latestMessage,
+        }));
+        setConversations(safeData);
+      });
   };
 
   // Show loading while checking authentication
@@ -108,24 +135,38 @@ export default function MessagesPage() {
     <div className="container mx-auto px-2 py-6 md:px-4 md:py-8">
       <h1 className="text-3xl font-bold mb-6 text-foreground">Messages</h1>
       <div className="flex flex-col md:flex-row border border-border rounded-lg overflow-hidden bg-card min-h-[400px] h-[70vh]">
-        {/* User List */}
+        {/* Conversation List */}
         <div className="w-full md:w-64 border-b md:border-b-0 md:border-r border-border bg-background p-2 md:p-4 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-x-visible">
-          <h2 className="hidden md:block text-lg font-semibold mb-2 text-foreground">Players</h2>
-          {users.map(user => (
-            <button
-              key={user.id}
-              className={`flex items-center gap-3 text-left px-3 py-2 rounded transition-colors min-w-[140px] md:min-w-0 ${selectedUserId === user.id ? 'bg-primary text-primary-foreground' : 'hover:bg-accent text-foreground'}`}
-              onClick={() => setSelectedUserId(user.id)}
-            >
-              <img
-                src={user.image || fallbackAvatar}
-                alt={user.name}
-                className="w-8 h-8 rounded-full object-cover border border-border bg-background"
-                onError={e => (e.currentTarget.src = fallbackAvatar)}
-              />
-              <span className="truncate">{user.name}</span>
-            </button>
-          ))}
+          <h2 className="hidden md:block text-lg font-semibold mb-2 text-foreground">Conversations</h2>
+          {conversations.length === 0 && (
+            <div className="text-muted-foreground px-2 py-4">No conversations yet.</div>
+          )}
+          {conversations.map(({ user, latestMessage }) => {
+            if (!('id' in user) || typeof user.id !== 'string') return null;
+            return (
+              <button
+                key={user.id}
+                className={`flex flex-col items-start gap-1 text-left px-3 py-2 rounded transition-colors min-w-[140px] md:min-w-0 ${selectedUserId === user.id ? 'bg-primary text-primary-foreground' : 'hover:bg-accent text-foreground'}`}
+                onClick={() => setSelectedUserId(user.id)}
+              >
+                <div className="flex items-center gap-3 w-full">
+                  <img
+                    src={user.image || fallbackAvatar}
+                    alt={user.name || 'Unknown'}
+                    className="w-8 h-8 rounded-full object-cover border border-border bg-background"
+                    onError={e => (e.currentTarget.src = fallbackAvatar)}
+                  />
+                  <span className="truncate font-medium">{user.name || 'Unknown'}</span>
+                </div>
+                {latestMessage && (
+                  <div className="w-full text-xs text-muted-foreground truncate">
+                    {latestMessage.content.length > 30 ? latestMessage.content.slice(0, 30) + '…' : latestMessage.content}
+                    <span className="float-right ml-2">{formatTime(latestMessage.createdAt)}</span>
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
         {/* Chat Window */}
         <div className="flex-1 flex flex-col min-w-0">
@@ -177,7 +218,7 @@ export default function MessagesPage() {
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center text-muted-foreground text-lg">
-              Select a player to start chatting.
+              Select a conversation to start chatting.
             </div>
           )}
         </div>
