@@ -52,7 +52,8 @@ export async function GET(req: NextRequest) {
       });
       let user = await prisma.user.findUnique({ where: { id: otherUserId }, select: { id: true, name: true, image: true } });
       if (!user) user = { id: otherUserId, name: 'Unknown', image: null };
-      return { user, latestMessage: latest };
+      // Ensure all fields are present and of correct type
+      return { user: { id: String(user.id), name: user.name || 'Unknown', image: user.image || null }, latestMessage: latest };
     }));
     return NextResponse.json(conversations);
   }

@@ -22,6 +22,8 @@ interface Conversation {
   latestMessage: Message;
 }
 
+type APIConversation = { user: { id?: string; name?: string; image?: string }; latestMessage: Message };
+
 const fallbackAvatar = '/default-avatar.png';
 
 function formatTime(date: string) {
@@ -50,8 +52,7 @@ export default function MessagesPage() {
     if (status === 'authenticated' && session?.user?.id) {
       fetch(`/api/messages?conversationsFor=${session.user.id}`)
         .then(res => res.json())
-        .then((data: any[]) => {
-          // Type assertion: ensure each user has an id
+        .then((data: APIConversation[]) => {
           const safeData: Conversation[] = data.map(c => ({
             user: {
               id: typeof c.user.id === 'string' ? c.user.id : 'unknown',
@@ -100,7 +101,7 @@ export default function MessagesPage() {
     // Refresh conversations to update latest message
     fetch(`/api/messages?conversationsFor=${currentUser.id}`)
       .then(res => res.json())
-      .then((data: any[]) => {
+      .then((data: APIConversation[]) => {
         const safeData: Conversation[] = data.map(c => ({
           user: {
             id: typeof c.user.id === 'string' ? c.user.id : 'unknown',
@@ -142,21 +143,22 @@ export default function MessagesPage() {
             <div className="text-muted-foreground px-2 py-4">No conversations yet.</div>
           )}
           {conversations.map(({ user, latestMessage }) => {
-            if (!('id' in user) || typeof user.id !== 'string') return null;
+            const safeUser = user as User;
+            if (!safeUser.id) return null;
             return (
               <button
-                key={user.id}
-                className={`flex flex-col items-start gap-1 text-left px-3 py-2 rounded transition-colors min-w-[140px] md:min-w-0 ${selectedUserId === user.id ? 'bg-primary text-primary-foreground' : 'hover:bg-accent text-foreground'}`}
-                onClick={() => setSelectedUserId(user.id)}
+                key={safeUser.id}
+                className={`flex flex-col items-start gap-1 text-left px-3 py-2 rounded transition-colors min-w-[140px] md:min-w-0 ${selectedUserId === safeUser.id ? 'bg-primary text-primary-foreground' : 'hover:bg-accent text-foreground'}`}
+                onClick={() => setSelectedUserId(safeUser.id)}
               >
                 <div className="flex items-center gap-3 w-full">
                   <img
-                    src={user.image || fallbackAvatar}
-                    alt={user.name || 'Unknown'}
+                    src={safeUser.image || fallbackAvatar}
+                    alt={safeUser.name || 'Unknown'}
                     className="w-8 h-8 rounded-full object-cover border border-border bg-background"
                     onError={e => (e.currentTarget.src = fallbackAvatar)}
                   />
-                  <span className="truncate font-medium">{user.name || 'Unknown'}</span>
+                  <span className="truncate font-medium">{safeUser.name || 'Unknown'}</span>
                 </div>
                 {latestMessage && (
                   <div className="w-full text-xs text-muted-foreground truncate">
