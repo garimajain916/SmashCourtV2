@@ -70,8 +70,4 @@ export async function POST(req: NextRequest) {
     data: { senderId, recipientId, content },
   });
   return NextResponse.json(message);
-}
-
-export function handler() {
-  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
 } 
