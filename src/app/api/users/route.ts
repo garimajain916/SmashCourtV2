@@ -8,8 +8,4 @@ export async function GET() {
     select: { id: true, name: true, image: true },
   });
   return NextResponse.json(users);
-}
-
-export function handler() {
-  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
 } 
