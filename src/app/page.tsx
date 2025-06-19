@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { Button } from "@/components/ui/button"
 import { getTennisCourtImages, getTennisPlayerImages } from '@/lib/pexels'
 
 export default async function Home() {
@@ -38,9 +39,9 @@ export default async function Home() {
           Join Smash Court today and never play alone again.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/register" className="bg-primary text-primary-foreground px-8 py-3 rounded-md text-lg font-semibold hover:bg-primary/90 transition-colors">
-            Sign Up
-          </Link>
+          <Button asChild>
+            <Link href="/register">Sign Up</Link>
+          </Button>
         </div>
       </section>
 
