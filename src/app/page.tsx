@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button"
+import { ModeToggle } from "@/components/ui/mode-toggle"
 import { getTennisCourtImages, getTennisPlayerImages } from '@/lib/pexels'
 
 export default async function Home() {
@@ -21,9 +22,10 @@ export default async function Home() {
             <Link href="/login" className="text-foreground hover:text-primary transition-colors">
               Login
             </Link>
-            <Link href="/register" className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
-              Sign Up
-            </Link>
+            <Button variant="default" asChild>
+              <Link href="/register">Sign Up</Link>
+            </Button>
+            <ModeToggle />
           </nav>
         </div>
       </header>
@@ -39,7 +41,7 @@ export default async function Home() {
           Join Smash Court today and never play alone again.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild>
+          <Button variant="default" asChild>
             <Link href="/register">Sign Up</Link>
           </Button>
         </div>
@@ -62,7 +64,7 @@ export default async function Home() {
           </div>
           <div className="text-center p-6">
             <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <div className="text-2xl">🎾</div>
+              <div className="text-2xl">💬</div>
             </div>
             <h4 className="text-xl font-semibold text-foreground mb-2">Coordinate Games</h4>
             <p className="text-muted-foreground">
@@ -71,7 +73,7 @@ export default async function Home() {
           </div>
           <div className="text-center p-6">
             <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <div className="text-2xl">💬</div>
+              <div className="text-2xl">🎾</div>
             </div>
             <h4 className="text-xl font-semibold text-foreground mb-2">Play Tennis!</h4>
             <p className="text-muted-foreground">
@@ -81,32 +83,52 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Toronto Courts Preview */}
-      <section className="container mx-auto px-4 py-16">
-        <h3 className="text-3xl font-bold text-center text-foreground mb-12">
-          Top Courts in Downtown Toronto
+      {/* Pricing Section */}
+      <section className="container mx-auto px-4 py-16 text-center">
+        <h3 className="text-4xl font-bold text-center text-foreground mb-4">
+          Simple, Transparent Pricing
         </h3>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            { name: "Queen&apos;s Park Tennis Courts", neighborhood: "Downtown", features: ["Historic Location", "Public Transit"] },
-            { name: "Trinity Bellwoods Park Courts", neighborhood: "Queen West", features: ["Community Atmosphere", "Cafes Close"] },
-            { name: "High Park Tennis Courts", neighborhood: "High Park", features: ["Multiple Courts", "Park Setting"] },
-            { name: "Christie Pits Park Courts", neighborhood: "Christie Pits", features: ["Community Events", "Affordable"] },
-            { name: "Sherbourne Common Courts", neighborhood: "Waterfront", features: ["Waterfront Location", "Scenic Views"] },
-            { name: "Regent Park Courts", neighborhood: "Regent Park", features: ["Modern Facilities", "Public Transit"] },
-          ].map((court, index) => (
-            <div key={index} className="bg-card border border-border rounded-lg p-6">
-              <h4 className="text-lg font-semibold text-foreground mb-2">{court.name}</h4>
-              <p className="text-sm text-muted-foreground mb-3">{court.neighborhood}</p>
-              <div className="flex flex-wrap gap-1">
-                {court.features.map((feature, featureIndex) => (
-                  <span key={featureIndex} className="bg-accent px-2 py-1 rounded text-xs">
-                    {feature}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+        <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
+          Start your pool today with our limited-time launch offer
+        </p>
+        
+        <div className="max-w-lg mx-auto bg-card border border-border rounded-xl p-8">
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <span className="text-3xl text-muted-foreground line-through">$10</span>
+            <span className="text-6xl font-bold text-foreground">$0</span>
+            <span className="text-xl text-muted-foreground">/month</span>
+          </div>
+          
+          <div className="text-primary text-lg font-medium mb-8">
+            Limited Time Launch Offer
+          </div>
+          
+          <ul className="space-y-4 mb-8">
+            <li className="flex items-center gap-3 text-foreground">
+              <div className="text-primary">✓</div>
+              Unlimited match scheduling
+            </li>
+            <li className="flex items-center gap-3 text-foreground">
+              <div className="text-primary">✓</div>
+              Real-time availability updates
+            </li>
+            <li className="flex items-center gap-3 text-foreground">
+              <div className="text-primary">✓</div>
+              All tournament formats included
+            </li>
+            <li className="flex items-center gap-3 text-foreground">
+              <div className="text-primary">✓</div>
+              Premium support
+            </li>
+          </ul>
+          
+          <Button asChild className="w-full text-lg py-6" variant="default" size="lg">
+            <Link href="/register">Create Your Free Account</Link>
+          </Button>
+          
+          <p className="text-muted-foreground mt-4 text-sm">
+            No credit card required
+          </p>
         </div>
       </section>
 
