@@ -1,15 +1,9 @@
 {
-  "/_not-found": "app/_not-found.js",
+  "/not-found": "app/not-found.js",
+  "/privacy/page": "app/privacy/page.js",
   "/(auth)/login/page": "app/(auth)/login/page.js",
   "/(auth)/register/page": "app/(auth)/register/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/api/auth/register/route": "app/api/auth/register/route.js",
-  "/api/players/route": "app/api/players/route.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/api/messages/route": "app/api/messages/route.js",
-  "/messages/page": "app/messages/page.js",
-  "/api/users/route": "app/api/users/route.js",
-  "/search/page": "app/search/page.js",
+  "/terms/page": "app/terms/page.js",
   "/page": "app/page.js",
-  "/profile/page": "app/profile/page.js"
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js"
 }
