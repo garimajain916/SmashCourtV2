@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { torontoCourts } from '@/lib/toronto-courts'
 import { PlayerCard } from '@/components/PlayerCard'
+import { Button } from "@/components/ui/button"
 
 const PAGE_SIZE = 6
 
@@ -150,21 +151,21 @@ export default function SearchPage() {
           {/* Pagination Controls */}
           {totalPages > 1 && (
             <div className="flex justify-center items-center gap-4 mt-8">
-              <button
-                className="px-4 py-2 rounded bg-accent text-foreground disabled:opacity-50"
+              <Button
+                variant="outline"
                 onClick={() => setPage(page - 1)}
                 disabled={page === 1}
               >
                 Previous
-              </button>
+              </Button>
               <span className="text-foreground">Page {page} of {totalPages}</span>
-              <button
-                className="px-4 py-2 rounded bg-accent text-foreground disabled:opacity-50"
+              <Button
+                variant="outline"
                 onClick={() => setPage(page + 1)}
                 disabled={page === totalPages}
               >
                 Next
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -173,13 +174,14 @@ export default function SearchPage() {
       {selectedPlayer && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-card border border-border rounded-lg p-8 max-w-md w-full relative">
-            <button
-              className="absolute top-2 right-2 text-2xl text-muted-foreground hover:text-foreground"
+            <Button
+              variant="outline"
+              className="absolute top-2 right-2 h-8 w-8 p-0"
               onClick={handleCloseModal}
               aria-label="Close"
             >
               ×
-            </button>
+            </Button>
             <h2 className="text-2xl font-bold mb-2 text-foreground">{selectedPlayer.name}</h2>
             <div className="mb-2 text-muted-foreground">NTRP: {selectedPlayer.ntrp}</div>
             <div className="mb-2 text-muted-foreground">Courts: {selectedPlayer.courts.map(cid => torontoCourts.find(c => c.id === cid)?.name).join(', ')}</div>

@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Button } from "@/components/ui/button"
 
 interface User {
   id: string;
@@ -215,7 +216,7 @@ export default function MessagesPage() {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                 />
-                <button type="submit" className="bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90">Send</button>
+                <Button type="submit" variant="outline">Send</Button>
               </form>
             </>
           ) : (

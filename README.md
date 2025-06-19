@@ -55,6 +55,118 @@ A modern web application that connects tennis players in your local area. Find p
 - **Zod** - Schema validation
 - **date-fns** - Date manipulation
 
+## UI Components
+
+This project uses a comprehensive design system built with **shadcn/ui** components and **Tailwind CSS**. All components are fully accessible, customizable, and follow modern design principles.
+
+### 🎨 Core Components
+
+#### **Theme System**
+- **ThemeProvider** - Context provider for theme management
+- **ModeToggle** - Dark/light mode switcher with smooth transitions
+- **Custom Color Scheme** - HSL-based green theme for light and dark modes
+
+#### **Layout & Navigation**
+- **NavigationMenu** - Accessible navigation with dropdown support
+- **Breadcrumb** - Hierarchical navigation breadcrumbs
+- **AspectRatio** - Responsive aspect ratio container for media
+
+#### **Interactive Elements**
+- **Button** - Multiple variants (default, destructive, outline, secondary, ghost, link)
+- **Avatar** - User profile images with fallback support
+- **Pagination** - Page navigation with customizable controls
+
+#### **Feedback & Alerts**
+- **WarningAlert** - Alert component for important notifications
+- **Toast** - Non-intrusive notification system
+
+### 🎯 Component Features
+
+#### **Accessibility**
+- ARIA labels and roles
+- Keyboard navigation support
+- Screen reader compatibility
+- Focus management
+
+#### **Responsive Design**
+- Mobile-first approach
+- Adaptive layouts
+- Touch-friendly interactions
+- Flexible grid systems
+
+#### **Customization**
+- CSS custom properties for theming
+- Tailwind utility classes
+- Component variants and sizes
+- Consistent spacing and typography
+
+### 📁 Component Structure
+
+```
+components/
+├── ui/                    # shadcn/ui components
+│   ├── alert.tsx         # Warning and info alerts
+│   ├── aspect-ratio.tsx  # Responsive aspect ratios
+│   ├── avatar.tsx        # User avatars
+│   ├── breadcrumb.tsx    # Navigation breadcrumbs
+│   ├── button.tsx        # Button variants
+│   ├── navigation-menu.tsx # Main navigation
+│   ├── pagination.tsx    # Page navigation
+│   └── theme-provider.tsx # Theme management
+├── theme-toggle.tsx      # Dark/light mode toggle
+└── layout/              # Layout components
+```
+
+### 🎨 Design System
+
+#### **Color Palette**
+- **Primary**: Custom green HSL theme
+- **Secondary**: Neutral grays
+- **Accent**: Highlight colors
+- **Muted**: Subtle backgrounds
+- **Destructive**: Error states
+
+#### **Typography**
+- **Font Family**: System fonts with fallbacks
+- **Font Sizes**: Responsive scale
+- **Line Heights**: Optimized for readability
+- **Font Weights**: Consistent hierarchy
+
+#### **Spacing**
+- **Consistent Scale**: 4px base unit
+- **Responsive**: Adapts to screen size
+- **Component-Specific**: Tailored spacing for each component
+
+### 🚀 Usage Examples
+
+```tsx
+// Theme Toggle
+<ModeToggle />
+
+// Navigation Menu
+<NavigationMenu>
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger>Features</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        {/* Dropdown content */}
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>
+
+// Avatar with Fallback
+<Avatar>
+  <AvatarImage src="/user.jpg" alt="User" />
+  <AvatarFallback>JD</AvatarFallback>
+</Avatar>
+
+// Responsive Aspect Ratio
+<AspectRatio ratio={16 / 9}>
+  <Image src="/tennis-court.jpg" alt="Tennis Court" fill />
+</AspectRatio>
+```
+
 ## Project Milestones
 
 ### 🚀 Milestone 1: Foundation & Profiles (Week 1-2)

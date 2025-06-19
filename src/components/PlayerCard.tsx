@@ -1,5 +1,6 @@
 import { torontoCourts } from '@/lib/toronto-courts'
 import { useState } from 'react'
+import { Button } from "@/components/ui/button"
 
 interface PlayerCardProps {
   player: {
@@ -49,7 +50,7 @@ export function PlayerCard({ player, onViewProfile }: PlayerCardProps) {
         </ul>
       </div>
       <div className="text-sm text-muted-foreground w-full text-left">{player.bio}</div>
-      <button onClick={onViewProfile} className="mt-2 bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90">Message</button>
+      <Button variant="outline" onClick={onViewProfile} className="mt-2">Message</Button>
     </div>
   )
 } 

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react';
 import { signIn, getSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Button } from "@/components/ui/button"
 
 export default function LoginPage() {
   const router = useRouter();
@@ -141,13 +142,14 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            <button
+            <Button
               type="submit"
+              variant="outline"
               disabled={loading}
-              className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full"
             >
               {loading ? 'Signing In...' : 'Sign In'}
-            </button>
+            </Button>
           </form>
 
           <div className="mt-6">
@@ -160,10 +162,11 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <button
+            <Button
               onClick={handleGoogleSignIn}
+              variant="outline"
               disabled={googleLoading}
-              className="mt-4 w-full flex items-center justify-center gap-2 bg-background border border-border text-foreground py-2 px-4 rounded-md text-sm font-medium hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-4 w-full"
             >
               {googleLoading ? (
                 'Signing in...'
@@ -190,7 +193,7 @@ export default function LoginPage() {
                   Continue with Google
                 </>
               )}
-            </button>
+            </Button>
           </div>
 
           <div className="mt-6 text-center">

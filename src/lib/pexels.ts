@@ -1,5 +1,5 @@
 // Pexels API utility for fetching tennis-related images
-const PEXELS_API_KEY = process.env.PEXELS_API_KEY || 'your-pexels-api-key'
+const PEXELS_API_KEY = process.env.PEXELS_API_KEY
 const PEXELS_API_URL = 'https://api.pexels.com/v1'
 
 export interface PexelsImage {
@@ -32,6 +32,12 @@ export interface PexelsResponse {
 }
 
 export async function searchTennisImages(query: string = 'tennis', perPage: number = 10): Promise<PexelsImage[]> {
+  // If no API key is provided, return fallback images immediately
+  if (!PEXELS_API_KEY || PEXELS_API_KEY === 'your-pexels-api-key-here') {
+    console.log('Pexels API key not configured, using fallback images')
+    return getFallbackImages()
+  }
+
   try {
     const response = await fetch(
       `${PEXELS_API_URL}/search?query=${encodeURIComponent(query)}&per_page=${perPage}`,
@@ -43,14 +49,14 @@ export async function searchTennisImages(query: string = 'tennis', perPage: numb
     )
 
     if (!response.ok) {
-      throw new Error(`Pexels API error: ${response.status}`)
+      console.warn(`Pexels API error: ${response.status}, using fallback images`)
+      return getFallbackImages()
     }
 
     const data: PexelsResponse = await response.json()
     return data.photos
   } catch (error) {
-    console.error('Error fetching images from Pexels:', error)
-    // Return fallback images if API fails
+    console.warn('Error fetching images from Pexels, using fallback images:', error)
     return getFallbackImages()
   }
 }
