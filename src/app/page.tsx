@@ -54,28 +54,31 @@ export default async function Home() {
         </h3>
         <div className="grid md:grid-cols-3 gap-8">
           <div className="text-center p-6">
-            <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-sm text-primary font-medium mb-4">Step 1</div>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <h4 className="text-xl font-semibold text-foreground">Find Players</h4>
               <div className="text-2xl">👥</div>
             </div>
-            <h4 className="text-xl font-semibold text-foreground mb-2">Find Players</h4>
             <p className="text-muted-foreground">
               Discover tennis players in downtown Toronto based on skill level, availability, and court preferences.
             </p>
           </div>
           <div className="text-center p-6">
-            <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-sm text-primary font-medium mb-4">Step 2</div>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <h4 className="text-xl font-semibold text-foreground">Coordinate Games</h4>
               <div className="text-2xl">💬</div>
             </div>
-            <h4 className="text-xl font-semibold text-foreground mb-2">Coordinate Games</h4>
             <p className="text-muted-foreground">
               Schedule matches at the top 10 courts in downtown Toronto and organize your tennis activities with ease.
             </p>
           </div>
           <div className="text-center p-6">
-            <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-sm text-primary font-medium mb-4">Step 3</div>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <h4 className="text-xl font-semibold text-foreground">Play Tennis!</h4>
               <div className="text-2xl">🎾</div>
             </div>
-            <h4 className="text-xl font-semibold text-foreground mb-2">Play Tennis!</h4>
             <p className="text-muted-foreground">
               Meet up, hit the courts, and enjoy real tennis matches with new friends in Toronto.
             </p>
@@ -134,10 +137,23 @@ export default async function Home() {
 
       {/* Footer */}
       <footer className="border-t border-border mt-16">
-        <div className="container mx-auto px-4 py-8 text-center">
-          <p className="text-muted-foreground">
-            © 2024 Smash Court. Built with ❤️ for the Toronto tennis community.
-          </p>
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <p className="text-muted-foreground">
+              © 2024 Smash Court. Built with ❤️ for the Toronto tennis community.
+            </p>
+            <div className="flex items-center space-x-6">
+              <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
+                Terms
+              </Link>
+              <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
+                Privacy
+              </Link>
+              <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
+                Contact
+              </Link>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
